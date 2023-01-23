@@ -1,7 +1,6 @@
 type Node<T> = {
     value: T;
     next?: Node<T>
-    prev?: Node<T>
 }
 export default class Stack<T> {
     public length: number;
@@ -16,7 +15,6 @@ export default class Stack<T> {
         this.length++;
         const newNode = {value: item} as Node<T>
         if (this.head !== undefined) {
-            this.head.prev = newNode;
             newNode.next = this.head;
         }
         this.head = newNode;
@@ -30,7 +28,6 @@ export default class Stack<T> {
         const popped = this.head;
         const next = popped.next;
         if (next !== undefined) {
-            next.prev = undefined;
             popped.next = undefined;
         }
         this.head = next;
