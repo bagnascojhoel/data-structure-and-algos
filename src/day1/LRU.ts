@@ -1,15 +1,11 @@
 export default class LRU<K, V> {
-    private length: number;
+  private length: number
+  private head: K
+  private tail: K
 
-    
+  constructor() {}
 
-    constructor() {
-    }
+  update(key: K, value: V): void {}
 
-    update(key: K, value: V): void {
-
-}
-    get(key: K): V | undefined {
-
-}
+  get(key: K): V | undefined {}
 }

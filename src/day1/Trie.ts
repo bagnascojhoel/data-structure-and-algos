@@ -1,87 +1,87 @@
 type Node = {
-    value: string
-    isWordEnd?: boolean
-    children: (Node | undefined)[]
+  value: string
+  isWordEnd?: boolean
+  children: (Node | undefined)[]
 }
 
 export default class Trie {
-    private static INITIAL_CHAR_CODE: number = "a".charCodeAt(0);
-    private root: Node;
+  private static INITIAL_CHAR_CODE: number = 'a'.charCodeAt(0)
+  private root: Node
 
-    constructor() {
-        this.root = { value: "", children: [] };
+  constructor() {
+    this.root = { value: '', children: [] }
+  }
+
+  insert(item: string): void {
+    let current: Node | undefined = this.root
+    let charIndex: number | undefined = undefined
+    for (let char of item) {
+      if (current === undefined) break
+
+      charIndex = this.calculateIndex(char)
+      if (current.children[charIndex] === undefined) {
+        current.children[charIndex] = { value: char, children: [] }
+      }
+      current = current.children[charIndex]
     }
 
-    insert(item: string): void {
-        let current: Node | undefined = this.root;
-        let charIndex: number | undefined = undefined;
-        for (let char of item) {
-            if (current === undefined) break;
+    if (current) {
+      current.isWordEnd = true
+    }
+  }
 
-            charIndex = this.calculateIndex(char);
-            if (current.children[charIndex] === undefined) {
-                current.children[charIndex] = { value: char, children: [] };
-            }
-            current = current.children[charIndex];
+  delete(word: string): void {
+    let current = this.root
+    let child: Node | undefined = undefined
+    let childIndex: number | undefined = undefined
+    for (let char of word) {
+      childIndex = this.calculateIndex(char)
+      child = current.children[childIndex]
+
+      if (child !== undefined) {
+        if (child?.children.length === 0) {
+          current.children[childIndex] = undefined
         }
 
-        if (current) {
-            current.isWordEnd = true;
-        }
+        current = child
+      }
     }
 
-    delete(word: string): void {
-        let current = this.root;
-        let child: Node | undefined = undefined;
-        let childIndex: number | undefined = undefined;
-        for (let char of word) {
-            childIndex = this.calculateIndex(char);
-            child = current.children[childIndex];
+    if (child?.isWordEnd) {
+      child.isWordEnd = false
+    }
+  }
 
-            if (child !== undefined) {
-                if (child?.children.length === 0) {
-                    current.children[childIndex] = undefined
-                }
+  find(partial: string): string[] {
+    let current: Node | undefined = this.root
+    for (let char of partial) {
+      if (current === undefined) return []
 
-                current = child;
-            }
-        }
-
-        if (child?.isWordEnd) {
-            child.isWordEnd = false;
-        }
+      current = current.children[this.calculateIndex(char)]
     }
 
-    find(partial: string): string[] {
-        let current: Node | undefined = this.root;
-        for (let char of partial) {
-            if (current === undefined) return [];
+    return this.search(current, partial)
+  }
 
-            current = current.children[this.calculateIndex(char)]
-        }
+  private search(current: Node | undefined, partial: string): string[] {
+    if (!current) return []
 
-        return this.search(current, partial);
+    let result: string[] = []
+    for (let child of current.children) {
+      if (child === undefined) {
+        continue
+      }
+
+      if (child.isWordEnd) {
+        result.push(partial + child.value)
+      }
+
+      result = [...result, ...this.search(child, partial + child.value)]
     }
+    return result
+  }
 
-    private search(current: Node | undefined, partial: string): string[] {
-        if (!current) return [];
-
-        let result: string[] = [];
-        for (let child of current.children) {
-            if (child === undefined) {
-                continue;
-            }
-
-            if (child.isWordEnd) {
-                result.push(partial + child.value);
-            }
-
-            result = [...result, ...this.search(child, partial + child.value)]
-        }
-        return result;
-    }
-
-    private calculateIndex(char: string): number {
-        return char.charCodeAt(0) - Trie.INITIAL_CHAR_CODE;
-    }
+  private calculateIndex(char: string): number {
+    return char.charCodeAt(0) - Trie.INITIAL_CHAR_CODE
+  }
 }
