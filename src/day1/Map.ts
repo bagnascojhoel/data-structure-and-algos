@@ -81,7 +81,9 @@ export default class Map<T extends string | number, V> {
   private increaseCapacity() {
     const currentCapacity = this.nodeGroupCapacity
     const currentNodeGroups = this.nodeGroups
-    this.nodeGroupCapacity *= CAPACITY_INCREASE_FACTOR
+    this.nodeGroupCapacity = Math.ceil(
+      this.nodeGroupCapacity * CAPACITY_INCREASE_FACTOR
+    )
     this.nodeGroups = new ArrayList(this.nodeGroupCapacity)
 
     for (let i = 0; i < currentCapacity; i++) {
