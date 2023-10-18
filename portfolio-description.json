@@ -1,0 +1,5 @@
+{
+    "title": "Data Structure and Algorithms",
+    "tags": ["node", "course", "algorithms", "javascript"],
+    "description": "My solutions for the exercices for the Data Structure and Algorithms course I made. Data structures like Stack, Queue, Map, Graph, Trie, and algorithms as Bubble Sort, QuickSort, Dijkstra Algorithm."
+  }
